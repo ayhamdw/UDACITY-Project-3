@@ -3,6 +3,9 @@ const apiKey = "&appid=b8b3db4c2aa888ef7d532971fcdd72bb";
 const url = `https://api.openweathermap.org/data/2.5/weather?zip=`;
 const zipValue = document.getElementById("zip").value;
 
+let date = new Date();
+let newDate = date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear();
+
 const getWeather = async function (url = "", zip = "", key = "") {
   const data = await fetch(url + zip + key);
   try {
@@ -30,8 +33,23 @@ const postData = async function (url = "", data = {}) {
   }
 };
 
+document.getElementById("generate").addEventListener("click", function () {
+  const zipValue = document.getElementById("zip").value;
+  const feelings = document.getElementById("feelings").value;
+  getWeather(url, zipValue, apiKey)
+    .then(function (data) {
+      postData("http://localhost:8785/PostData", {
+        date: newDate,
+        temp: data.main.temp,
+        content: feelings,
+      });
+    })
+    .then(updateUI());
+});
+
 const updateUI = async function () {
-  const response = await fetch("/all");
+  const response = await fetch("http://localhost:8785/all");
+  console.log(response.data);
   try {
     const data = await response.json();
     document.getElementById("date").innerHTML = data.date;
@@ -41,19 +59,3 @@ const updateUI = async function () {
     console.log("error", error);
   }
 };
-
-document.getElementById("generate").addEventListener("click", function () {
-  const zipValue = document.getElementById("zip").value;
-  getWeather(url, zipValue, apiKey)
-    .then(function (data) {
-      postData("postData", {
-        data: data.date,
-        temp: data.temp,
-        content: data.content,
-      });
-    })
-    .then(updateUI());
-});
-// Create a new date instance dynamically with JS
-let d = new Date();
-let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
