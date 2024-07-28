@@ -36,7 +36,7 @@ app.post("/PostData", function (req, res) {
     userResponse: data.content,
     temp: data.temp,
   };
-  Object.assign(projectData, data);
+  Object.assign(projectData, response);
   console.log("Inside post Data: ", projectData);
   res.send(response);
 });

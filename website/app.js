@@ -38,22 +38,24 @@ document.getElementById("generate").addEventListener("click", function () {
   const feelings = document.getElementById("feelings").value;
   getWeather(url, zipValue, apiKey)
     .then(function (data) {
-      postData("http://localhost:8785/PostData", {
+      console.log(data);
+      return postData("http://localhost:8785/PostData", {
         date: newDate,
         temp: data.main.temp,
         content: feelings,
       });
     })
-    .then(updateUI());
+    .then(function () {
+      return updateUI();
+    });
 });
 
 const updateUI = async function () {
   const response = await fetch("http://localhost:8785/all");
-  console.log(response.data);
   try {
     const data = await response.json();
     document.getElementById("date").innerHTML = data.date;
-    document.getElementById("temp").innerHTML = data.temperature;
+    document.getElementById("temp").innerHTML = data.temp;
     document.getElementById("content").innerHTML = data.userResponse;
   } catch (error) {
     console.log("error", error);
