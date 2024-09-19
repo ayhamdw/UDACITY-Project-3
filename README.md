@@ -87,5 +87,3 @@ curl http://localhost:8785/PostData
 ```
 
 ---
-
-Happy coding! If you have any questions or need further assistance, feel free to reach out. 🌞
